@@ -64,6 +64,9 @@ export class Game extends Phaser.Scene {
 
         // Track game start time
         this.startTime = this.time.now;
+        // Track game start time
+        this.startTime = this.time.now;
+        this.totalScore = 0;
         this.gameEnded = false;
 
         // Create enemy group
@@ -180,6 +183,12 @@ export class Game extends Phaser.Scene {
         container.setInteractive(new Phaser.Geom.Rectangle(-textModel.width / 2 - 10, -20, textModel.width + 20, 40), Phaser.Geom.Rectangle.Contains);
 
         container.on('pointerdown', () => {
+            // Add remaining potential to total score
+            const currentScore = container.getData('score');
+            if (currentScore > 0) {
+                this.totalScore += Math.floor(currentScore);
+            }
+
             this.sound.play('explosion');
             this.explosionEmitter.emitParticleAt(container.x, container.y, 30);
             container.destroy();
@@ -286,8 +295,12 @@ export class Game extends Phaser.Scene {
     showGameOver(totalTime) {
         const gameOverScreen = document.getElementById('game-over-screen');
         const timeDisplay = document.getElementById('game-over-time');
-        if (gameOverScreen && timeDisplay) {
+        const scoreDisplay = document.getElementById('game-over-score');
+
+        if (gameOverScreen && timeDisplay && scoreDisplay) {
             timeDisplay.innerText = `Tempo totale: ${totalTime.toFixed(2)}s`;
+            scoreDisplay.innerText = `Punteggio Totale: ${this.totalScore}`;
+
             gameOverScreen.style.display = 'flex';
             setTimeout(() => {
                 gameOverScreen.style.opacity = '1';
