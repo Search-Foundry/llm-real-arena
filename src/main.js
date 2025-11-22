@@ -32,11 +32,8 @@ if (startScreen) {
 
         // Start music
         const scene = game.scene.getScene('Game');
-        if (scene && scene.music) {
-            scene.music.play({
-                loop: true,
-                volume: 0.5
-            });
+        if (scene) {
+            scene.startMusic();
         }
     });
 }

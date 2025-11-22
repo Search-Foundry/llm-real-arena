@@ -24,7 +24,14 @@ export class Game extends Phaser.Scene {
         this.sound.pauseOnBlur = false;
 
         this.music = this.sound.add('theme');
-        // Music will be played by the start screen interaction
+
+        // Check if we should play music immediately (race condition fix)
+        if (this.shouldPlayMusic) {
+            this.music.play({
+                loop: true,
+                volume: 0.5
+            });
+        }
 
         // Connect HTML slider to Phaser volume
         const volumeSlider = document.getElementById('volume');
@@ -52,7 +59,12 @@ export class Game extends Phaser.Scene {
             this.enemyData.push(line);
         }
 
-        this.currentEnemyIndex = 0;
+        // Shuffle the enemy data to ensure random order
+        Phaser.Utils.Array.Shuffle(this.enemyData);
+
+        // Track game start time
+        this.startTime = this.time.now;
+        this.gameEnded = false;
 
         // Create enemy group
         this.enemies = this.physics.add.group({
@@ -107,16 +119,21 @@ export class Game extends Phaser.Scene {
     }
 
     spawnEnemy() {
-        if (this.currentEnemyIndex >= this.enemyData.length) {
-            this.currentEnemyIndex = 0; // Loop back to start or stop? Let's loop for now.
+        if (this.enemyData.length === 0) {
+            // No more enemies to spawn
+            if (this.spawnEvent) {
+                this.spawnEvent.remove();
+                this.spawnEvent = null;
+            }
+            return;
         }
 
-        const line = this.enemyData[this.currentEnemyIndex];
-        this.currentEnemyIndex++;
+        const line = this.enemyData.pop();
 
         const parts = line.split(',');
         const modelName = parts[0];
         const companyName = parts[1];
+        const potential = parseInt(parts[9], 10) || 10000; // Default to 10000 if missing
 
         // Pick a random corner
         const corners = [
@@ -148,6 +165,10 @@ export class Game extends Phaser.Scene {
 
         container.add([textModel, textCompany]);
 
+        // Store potential as score/life
+        container.setData('score', potential);
+        container.setData('maxScore', potential); // For reference if needed
+
         // Enable physics for the container
         this.physics.world.enable(container);
 
@@ -177,7 +198,50 @@ export class Game extends Phaser.Scene {
         container.body.setCollideWorldBounds(true);
     }
 
-    update() {
+    update(time, delta) {
+        if (this.gameEnded) return;
+
+        // Update enemy scores (decay)
+        this.enemies.getChildren().forEach(enemy => {
+            let score = enemy.getData('score');
+            score -= delta; // Decrease by milliseconds elapsed (1000 per second)
+            enemy.setData('score', score);
+
+            // Update visual indication? (Maybe shake or turn redder?)
+            // For now, just check death
+            if (score <= 0) {
+                this.sound.play('explosion');
+                this.explosionEmitter.emitParticleAt(enemy.x, enemy.y, 30);
+                enemy.destroy();
+            }
+        });
+
+        // Check Win Condition
+        if (this.enemyData.length === 0 && this.enemies.getLength() === 0) {
+            this.gameEnded = true;
+            const totalTime = (this.time.now - this.startTime) / 1000;
+            this.showGameOver(totalTime);
+        }
+
+        // Update Progress Bar
+        if (this.spawnEvent && this.timerGraphics) {
+            const progress = this.spawnEvent.getProgress();
+
+            this.timerGraphics.clear();
+
+            // Draw background
+            this.timerGraphics.fillStyle(0x333333, 0.8);
+            this.timerGraphics.fillRect(10, 10, 200, 20);
+
+            // Draw fill
+            this.timerGraphics.fillStyle(0xff4444, 1);
+            this.timerGraphics.fillRect(10, 10, 200 * progress, 20);
+
+            // Draw border
+            this.timerGraphics.lineStyle(2, 0xffffff, 1);
+            this.timerGraphics.strokeRect(10, 10, 200, 20);
+        }
+
         if (this.cursors.left.isDown) {
             this.logo.setVelocityX(-160);
         } else if (this.cursors.right.isDown) {
@@ -192,6 +256,18 @@ export class Game extends Phaser.Scene {
             this.logo.setVelocityY(160);
         } else {
             this.logo.setVelocityY(0);
+        }
+    }
+
+    showGameOver(totalTime) {
+        const gameOverScreen = document.getElementById('game-over-screen');
+        const timeDisplay = document.getElementById('game-over-time');
+        if (gameOverScreen && timeDisplay) {
+            timeDisplay.innerText = `Tempo totale: ${totalTime.toFixed(2)}s`;
+            gameOverScreen.style.display = 'flex';
+            setTimeout(() => {
+                gameOverScreen.style.opacity = '1';
+            }, 10);
         }
     }
 }
