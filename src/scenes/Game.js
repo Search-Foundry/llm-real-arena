@@ -301,6 +301,13 @@ export class Game extends Phaser.Scene {
             timeDisplay.innerText = `Tempo totale: ${totalTime.toFixed(2)}s`;
             scoreDisplay.innerText = `Punteggio Totale: ${this.totalScore}`;
 
+            const restartButton = document.getElementById('restart-button');
+            if (restartButton) {
+                restartButton.onclick = () => {
+                    window.location.reload();
+                };
+            }
+
             gameOverScreen.style.display = 'flex';
             setTimeout(() => {
                 gameOverScreen.style.opacity = '1';
