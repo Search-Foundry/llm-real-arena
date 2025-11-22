@@ -259,6 +259,18 @@ export class Game extends Phaser.Scene {
         }
     }
 
+    startMusic() {
+        if (this.music) {
+            this.music.play({
+                loop: true,
+                volume: 0.5
+            });
+        } else {
+            // Music not ready yet, set flag to play in create()
+            this.shouldPlayMusic = true;
+        }
+    }
+
     showGameOver(totalTime) {
         const gameOverScreen = document.getElementById('game-over-screen');
         const timeDisplay = document.getElementById('game-over-time');
