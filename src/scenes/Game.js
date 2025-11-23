@@ -19,7 +19,8 @@ export class Game extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(400, 300, 'sky');
+        this.sky = this.add.image(this.scale.width / 2, this.scale.height / 2, 'sky').setDisplaySize(this.scale.width, this.scale.height);
+        this.scale.on('resize', this.resize, this);
 
         this.sound.pauseOnBlur = false;
 
@@ -41,7 +42,7 @@ export class Game extends Phaser.Scene {
             });
         }
 
-        this.logo = this.physics.add.image(400, 300, 'logo');
+        this.logo = this.physics.add.image(this.scale.width / 2, this.scale.height / 2, 'logo');
         this.logo.setScale(0.2); // Scale down the new logo
         this.logo.setCollideWorldBounds(true);
 
@@ -80,10 +81,10 @@ export class Game extends Phaser.Scene {
         this.physics.add.collider(this.enemies, this.enemies);
 
         // Create central obstacle (invisible circle)
-        const centralObstacle = this.add.circle(400, 300, 50, 0x000000, 0); // Radius 50, invisible
-        this.physics.add.existing(centralObstacle, true); // true = static body
-        this.physics.add.collider(this.enemies, centralObstacle);
-        this.physics.add.collider(this.logo, centralObstacle);
+        this.centralObstacle = this.add.circle(this.scale.width / 2, this.scale.height / 2, 50, 0x000000, 0); // Radius 50, invisible
+        this.physics.add.existing(this.centralObstacle, true); // true = static body
+        this.physics.add.collider(this.enemies, this.centralObstacle);
+        this.physics.add.collider(this.logo, this.centralObstacle);
 
         // Add collision with player
         this.physics.add.collider(this.logo, this.enemies);
@@ -97,6 +98,31 @@ export class Game extends Phaser.Scene {
             blendMode: 'ADD',
             emitting: false
         });
+
+        // Explicitly set world bounds to match the dynamic scale
+        this.physics.world.setBounds(0, 0, this.scale.width, this.scale.height);
+
+        this.timerBar = document.getElementById('spawn-timer-bar');
+
+        // Create Progress Bar using Graphics
+        this.timerGraphics = this.add.graphics();
+    }
+
+    resize(gameSize) {
+        const width = gameSize.width;
+        const height = gameSize.height;
+
+        this.physics.world.setBounds(0, 0, width, height);
+
+        this.sky.setPosition(width / 2, height / 2);
+        this.sky.setDisplaySize(width, height);
+
+        this.centralObstacle.setPosition(width / 2, height / 2);
+        this.centralObstacle.body.updateFromGameObject(); // Important for static bodies
+    }
+
+    startGame() {
+        this.startMusic();
 
         // Spawn first batch of enemies immediately
         for (let i = 0; i < 4; i++) {
@@ -114,11 +140,6 @@ export class Game extends Phaser.Scene {
             callbackScope: this,
             loop: true
         });
-
-        this.timerBar = document.getElementById('spawn-timer-bar');
-
-        // Create Progress Bar using Graphics
-        this.timerGraphics = this.add.graphics();
     }
 
     spawnEnemy() {
@@ -139,11 +160,13 @@ export class Game extends Phaser.Scene {
         const potential = parseInt(parts[9], 10) || 10000; // Default to 10000 if missing
 
         // Pick a random corner
+        const width = this.scale.width;
+        const height = this.scale.height;
         const corners = [
             { x: 0, y: 0, vx: 100, vy: 100 }, // Top-Left
-            { x: 800, y: 0, vx: -100, vy: 100 }, // Top-Right
-            { x: 0, y: 600, vx: 100, vy: -100 }, // Bottom-Left
-            { x: 800, y: 600, vx: -100, vy: -100 } // Bottom-Right
+            { x: width, y: 0, vx: -100, vy: 100 }, // Top-Right
+            { x: 0, y: height, vx: 100, vy: -100 }, // Bottom-Left
+            { x: width, y: height, vx: -100, vy: -100 } // Bottom-Right
         ];
         const corner = Phaser.Utils.Array.GetRandom(corners);
 

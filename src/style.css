@@ -58,13 +58,13 @@ body {
 }
 
 #game-over-screen h1 {
-  font-size: 5vw;
+  font-size: 5vmin;
   margin-bottom: 20px;
   text-align: center;
 }
 
 #game-over-screen p {
-  font-size: 2vw;
+  font-size: 3vmin;
   margin-bottom: 10px;
 }
 
@@ -86,7 +86,7 @@ body {
 }
 
 #start-screen h1 {
-  font-size: 10vw;
+  font-size: 10vmin;
   margin: 0;
   text-align: center;
   color: #028af8;
@@ -94,7 +94,7 @@ body {
 }
 
 #start-screen p {
-  font-size: 2vw;
+  font-size: 4vmin;
   color: #aaa;
   margin-top: 20px;
   animation: blink 1s infinite;
@@ -114,4 +114,17 @@ body {
 
 #app {
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+#countdown {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 20vmin;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+  z-index: 200;
+  pointer-events: none;
 }

@@ -4,6 +4,12 @@
 
 Welcome to **LLM (real) Arena**, a chaotic arcade game where you must pop the AI bubble before it bursts on its own!
 
+## 📸 Screenshots
+
+| Title Screen | Gameplay |
+|:---:|:---:|
+| ![Title Screen](screenshots/titlescreen.jpg) | ![Gameplay](screenshots/gamingscreen.jpg) |
+
 ## 🎮 Gameplay
 You are the **Search Foundry** agent (the Clone), floating in the digital void.
 Your mission: **Pop the AI Bubble**.
