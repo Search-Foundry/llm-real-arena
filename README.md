@@ -5,18 +5,19 @@
 Welcome to **LLM (real) Arena**, a chaotic arcade game where you must pop the AI bubble before it bursts on its own!
 
 ## 🎮 Gameplay
-You are the **Search Foundry** agent, floating in the digital void.
+You are the **Search Foundry** agent (the Clone), floating in the digital void.
 Your mission: **Pop the AI Bubble**.
 
-- **The Bubble**: A finite set of unique AI models (GPT-4, Claude, Llama, etc.) spawn in waves.
+- **The Bubble**: A finite set of unique AI models (displaying **Model Name** & **Company**) spawn in waves.
+- **Spawn Timer**: A visual timer bar indicates when the next wave of AI models will arrive.
 - **Potential (TTL)**: Each model has a "Potential" score that decreases over time (1000 points/sec).
 - **Bubble Burst**: If a model's potential reaches zero, it self-destructs (the bubble bursts), and you lose those points.
 - **Scoring**: Click on enemies to destroy them and "capture" their remaining potential as your score.
-- **Win Condition**: Destroy all models to clear the arena and see your total score.
-- **Physics**: Realistic bouncing and zero-gravity mechanics.
+- **Win Condition**: Destroy all models to clear the arena and see your total score and time.
+- **Physics**: Realistic bouncing, zero-gravity mechanics, and a **Central Obstacle** that deflects objects.
 
 ## 🕹️ Controls
-- **Arrow Keys**: Move Player
+- **Arrow Keys**: Move the Clone (Agent)
 - **Mouse Click**: Destroy Enemy
 - **Volume Slider**: Adjust Music Volume
 
