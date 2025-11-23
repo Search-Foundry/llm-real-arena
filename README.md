@@ -58,11 +58,20 @@ Your mission: **Pop the AI Bubble**.
 - **JavaScript**: Logic
 
 ## 📝 Credits
-- Developed by **Antigravity**  & **GarethJax** (https://github.com/garethjax)
-- **tutta la responsabilità di questa cagata è di Andrea Scarpetta (https://www.andreascarpetta.it)**
-- Music: "Defeat the Circuit Lords" by SUNO.AI
-- Assets: Phaser Labs & Custom music by freesounds.org
-- Supporto involontario di Search foundry: https://www.searchfoundry.pro
+
+- Developed by **Antigravity** & **GarethJax**  
+  GitHub: [https://github.com/garethjax](https://github.com/garethjax)
+
+- Tutta la responsabilità di questa cagata è di **Andrea Scarpetta**  
+  Sito: [https://www.andreascarpetta.it](https://www.andreascarpetta.it)
+
+- Music: *"Defeat the Circuit Lords"* by SUNO.AI
+
+- Assets: Phaser Labs  
+  SFX aggiuntivi da [freesound.org](https://freesound.org)
+
+- Supporto involontario di Search Foundry  
+  [https://www.searchfoundry.pro](https://www.searchfoundry.pro)
 
 ---
 *Non vi aspettate nulla di particolare, è solo un sano momento di follia*
