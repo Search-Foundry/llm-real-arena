@@ -41,10 +41,22 @@ export class Game extends Phaser.Scene {
                 this.sound.volume = event.target.value / 100;
             });
         }
-
+        // aggiungi il logo
         this.logo = this.physics.add.image(this.scale.width / 2, this.scale.height / 2, 'logo');
-        this.logo.setScale(0.2); // Scale down the new logo
+        this.logo.setScale(0.2);
         this.logo.setCollideWorldBounds(true);
+
+        // --- AGGIUNTA PER IL DRAG & DROP ---
+        this.logo.setInteractive();
+        this.input.setDraggable(this.logo);
+
+        this.input.on('drag', (pointer, gameObject, dragX, dragY) => {
+            gameObject.x = dragX;
+            gameObject.y = dragY;
+            // Fermiamo la fisica mentre lo trasciniamo col mouse per evitare effetti strani
+            gameObject.body.setVelocity(0);
+        });
+        // -----------------------------------
 
         this.cursors = this.input.keyboard.createCursorKeys();
 
@@ -245,6 +257,13 @@ export class Game extends Phaser.Scene {
     }
 
     update(time, delta) {
+
+
+        // --- AGGIUNTA PER LA ROTAZIONE ---
+        // Ruota di 3 gradi al secondo in modo costante e inarrestabile
+        this.logo.angle += 15 * (delta / 1000);
+        // ---
+
         if (this.gameEnded) return;
 
         // Update enemy scores (decay)
