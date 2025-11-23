@@ -1,6 +1,6 @@
 # LLM (real) Arena 🤖⚔️
 
-**Version:** 0.02
+**Version:** 0.3
 
 Welcome to **LLM (real) Arena**, a chaotic arcade game where you must pop the AI bubble before it bursts on its own!
 
@@ -58,10 +58,11 @@ Your mission: **Pop the AI Bubble**.
 - **JavaScript**: Logic
 
 ## 📝 Credits
-- Developed by **Antigravity** & **GarethJax**
-- Music: "Defeat the Circuit Lords"
-- Assets: Phaser Labs & Custom
-- supporto involontario di Search foundry: https://www.searchfoundry.pro
+- Developed by **Antigravity**  & **GarethJax** (https://github.com/garethjax)
+- **tutta la responsabilità di questa cagata è di Andrea Scarpetta (https://www.andreascarpetta.it)**
+- Music: "Defeat the Circuit Lords" by SUNO.AI
+- Assets: Phaser Labs & Custom music by freesounds.org
+- Supporto involontario di Search foundry: https://www.searchfoundry.pro
 
 ---
-*Stay tuned for v1.0!*
+*Non vi aspettate nulla di particolare, è solo un sano momento di follia*
