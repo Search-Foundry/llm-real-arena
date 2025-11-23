@@ -61,6 +61,7 @@ Your mission: **Pop the AI Bubble**.
 - Developed by **Antigravity** & **GarethJax**
 - Music: "Defeat the Circuit Lords"
 - Assets: Phaser Labs & Custom
+- supporto involontario di Search foundry: https://www.searchfoundry.pro
 
 ---
 *Stay tuned for v1.0!*
