@@ -2,10 +2,13 @@ import './style.css';
 import Phaser from 'phaser';
 import { Game } from './scenes/Game';
 
+// l'area di gioco rimepie il 99% dello spazio disponibile
+// e non si sovrappone ai nemici
+
 const config = {
     type: Phaser.AUTO,
-    width: '100%',
-    height: '100%',
+    width: '99%',
+    height: '99%',
     parent: 'app',
     backgroundColor: '#028af8',
     scale: {

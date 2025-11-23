@@ -51,6 +51,14 @@ export class Game extends Phaser.Scene {
         // Parse CSV and store data
         const data = this.cache.text.get('enemyData');
         const lines = data.split('\n');
+        //memorizziamo il numero di linee perchè ci serve per 
+        //conteggiare il  numero di nemici
+        this.totalEnemies = lines.length - 1;
+
+        //scriviamo il valore di totalEnemies in HTML
+        document.getElementById('nemici_count').textContent = this.totalEnemies;
+
+        // Create enemy data array
         this.enemyData = [];
 
         // Skip header (index 0) and empty lines
@@ -129,9 +137,9 @@ export class Game extends Phaser.Scene {
             this.spawnEnemy();
         }
 
-        // Spawn new batch of enemies every 8 seconds
+        // Spawn new batch of enemies every 4 seconds
         this.spawnEvent = this.time.addEvent({
-            delay: 8000,
+            delay: 4000,
             callback: () => {
                 for (let i = 0; i < 4; i++) {
                     this.spawnEnemy();
@@ -159,9 +167,11 @@ export class Game extends Phaser.Scene {
         const companyName = parts[1];
         const potential = parseInt(parts[9], 10) || 10000; // Default to 10000 if missing
 
-        // Pick a random corner
+        // Pick a random corner 
         const width = this.scale.width;
         const height = this.scale.height;
+        // il nemico potrebbe spawnare in qualsiasi angolo fino a 200 pixel di distanza dall'angolo
+
         const corners = [
             { x: 0, y: 0, vx: 100, vy: 100 }, // Top-Left
             { x: width, y: 0, vx: -100, vy: 100 }, // Top-Right
@@ -171,8 +181,8 @@ export class Game extends Phaser.Scene {
         const corner = Phaser.Utils.Array.GetRandom(corners);
 
         // Add random offset to prevent overlap
-        const offsetX = Phaser.Math.Between(-50, 50);
-        const offsetY = Phaser.Math.Between(-50, 50);
+        const offsetX = Phaser.Math.Between(-200, 200);
+        const offsetY = Phaser.Math.Between(-200, 200);
 
         const container = this.add.container(corner.x + offsetX, corner.y + offsetY);
 
@@ -215,6 +225,10 @@ export class Game extends Phaser.Scene {
             this.sound.play('explosion');
             this.explosionEmitter.emitParticleAt(container.x, container.y, 30);
             container.destroy();
+
+            // Decrement nemici_count
+            this.totalEnemies--;
+            document.getElementById('nemici_count').textContent = this.totalEnemies;
         });
 
         // Add to group FIRST
@@ -315,14 +329,36 @@ export class Game extends Phaser.Scene {
         }
     }
 
+    formatDamage(score) {
+        const damage = score * 1_000_000; // scala narrativa
+        const billions = damage / 1_000_000_000;
+
+        if (billions >= 1000) {
+            const trillions = billions / 1000;
+            return `${trillions.toFixed(3)} triliardi di dollari`;
+        } else {
+            return `${billions.toFixed(3)} miliardi di dollari`;
+        }
+    }
+
     showGameOver(totalTime) {
         const gameOverScreen = document.getElementById('game-over-screen');
         const timeDisplay = document.getElementById('game-over-time');
         const scoreDisplay = document.getElementById('game-over-score');
 
+
+
         if (gameOverScreen && timeDisplay && scoreDisplay) {
             timeDisplay.innerText = `Tempo totale: ${totalTime.toFixed(2)}s`;
-            scoreDisplay.innerText = `Punteggio Totale: ${this.totalScore}`;
+
+            // trasformiamo il pun teggio in "miliardi di dollari di danni, con usando . per dividere
+            // le miglaia". Visto che il punteggio è generalmente di 30000*40 modelli, dobbiamo trasformarmlo
+            // in una cifra tra 600 miliardi e un triliardo di dollari di danni
+            const damageText = this.formatDamage(this.totalScore);
+            scoreDisplay.innerText = `Danno Stimato ${damageText}`;
+            // aggiungiamo (audit SEC previsto tra 48 ore)
+            const auditText = '(audit SEC previsto tra 48 ore)';
+            scoreDisplay.innerText += `\n${auditText}`;
 
             const restartButton = document.getElementById('restart-button');
             if (restartButton) {
